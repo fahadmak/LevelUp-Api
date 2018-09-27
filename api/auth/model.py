@@ -1,14 +1,9 @@
-accounts = []
-deleted_accounts = []
-
 class Account:
     def __init__(self, account_id, name, username, password):
         self.account_id = account_id
         self.name = name
         self.username = username
         self.password = password
-        self.finished = False
-        self.active = False
 
     def __str__(self):
         return "{self.username} of ID {self.account_id} account has been successfully created".format(self=self)
@@ -18,20 +13,11 @@ class Account:
             'account_id': self.account_id,
             'name': self.name,
             'username': self.username,
-            'password': self.password,
-            'finished': self.finished,
-            'active': self.active
+            'password': self.password
         }
         return account
 
-    def marked(self):
-        self.finished = True
-
-    def unmarked(self):
-        self.finished = False
-
-    def login(self):
-        self.active = True
-
-    def logout(self):
-        self.active = False
+account = Account(1, 'fahad', 'fahad3', 'pass123')
+accounts = [account]
+logged_in_accounts = []
+deleted_accounts = []
