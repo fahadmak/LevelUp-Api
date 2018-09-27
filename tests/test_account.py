@@ -45,7 +45,8 @@ class TestAccount(unittest.TestCase):
         self.assertIn("Please input correct information", str(response.data))
 
     def test_login_user_already_logged_in(self):
-        post_login = dict(username='fahad3', password='pass123')
+        post_login1 = dict(username='fahad3', password='pass123')
         post_login2 = dict(username='fahad3', password='pass123')
-        response = self.app.post('/auth/login', json=post_login2)
-        self.assertIn("Please input correct information", str(response.data))
+        response1 = self.app.post('/auth/login', json=post_login1)
+        response2 = self.app.post('/auth/login', json=post_login2)
+        self.assertIn("You are already logged in", str(response2.data))
