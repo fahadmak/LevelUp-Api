@@ -27,4 +27,14 @@ class TestAccount(unittest.TestCase):
     def test_login_user(self):
         post_login = dict(username="Inception", password="clooneyboss")
         response = self.app.post('/auth/login', json=post_login)
-        self.assertIn("Inception you have logged created an account", str(response.data))
+        self.assertIn("Inception you have logged in", str(response.data))
+
+    def test_login_user_empty_fields(self):
+        post_login = dict(username="Inception")
+        response = self.app.post('/auth/login', json=post_login)
+        self.assertIn("Please fill missing fields", str(response.data))
+
+    def test_login_user_incorrect_input(self):
+        post_login = dict(username="Inception", password="7")
+        response = self.app.post('/auth/login', json=post_login)
+        self.assertIn("Please input correct information", str(response.data))
