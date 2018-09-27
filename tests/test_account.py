@@ -42,7 +42,7 @@ class TestAccount(unittest.TestCase):
     def test_login_user_password_do_not_match(self):
         post_login = dict(username='fahad3', password="1qwqee7")
         response = self.app.post('/auth/login', json=post_login)
-        self.assertIn("Please input correct information", str(response.data))
+        self.assertIn("User name and password do not match", str(response.data))
 
     def test_login_user_already_logged_in(self):
         post_login1 = dict(username='fahad3', password='pass123')
@@ -50,3 +50,15 @@ class TestAccount(unittest.TestCase):
         response1 = self.app.post('/auth/login', json=post_login1)
         response2 = self.app.post('/auth/login', json=post_login2)
         self.assertIn("You are already logged in", str(response2.data))
+
+
+# Tests for login user
+    def test_logout_user(self):
+        post_logout = dict(username='fahad3')
+        response = self.app.post('/auth/logout', json=post_logout)
+        self.assertIn("fahad3 you have logged out, until next time ", str(response.data))
+
+    def test_logout_user_not_logged_in(self):
+        post_login2 = dict(username='minatti')
+        response2 = self.app.post('/auth/logout', json=post_login2)
+        self.assertIn("You must be logged in to logged out", str(response2.data))
