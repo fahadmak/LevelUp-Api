@@ -20,3 +20,15 @@ class Account:
             'active': self.active
         }
         return account
+
+    def marked(self):
+        self.finished = True
+
+    def unmarked(self):
+        self.finished = False
+
+    def login(self):
+        self.active = True
+
+    def logout(self):
+        self.active = False
