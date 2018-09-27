@@ -25,16 +25,27 @@ class TestAccount(unittest.TestCase):
 
     # Tests for login user
     def test_login_user(self):
-        post_login = dict(username="Inception", password="clooneyboss")
+        post_login = dict(username='fahad3', password='pass123')
         response = self.app.post('/auth/login', json=post_login)
-        self.assertIn("Inception you have logged in", str(response.data))
+        self.assertIn("fahad3 you have logged in", str(response.data))
 
     def test_login_user_empty_fields(self):
-        post_login = dict(username="Inception")
+        post_login = dict(username='fahad3')
         response = self.app.post('/auth/login', json=post_login)
         self.assertIn("Please fill missing fields", str(response.data))
 
     def test_login_user_incorrect_input(self):
-        post_login = dict(username="Inception", password="7")
+        post_login = dict(username='fahad3', password=7)
         response = self.app.post('/auth/login', json=post_login)
+        self.assertIn("Please input correct information", str(response.data))
+
+    def test_login_user_password_do_not_match(self):
+        post_login = dict(username='fahad3', password="1qwqee7")
+        response = self.app.post('/auth/login', json=post_login)
+        self.assertIn("Please input correct information", str(response.data))
+
+    def test_login_user_already_logged_in(self):
+        post_login = dict(username='fahad3', password='pass123')
+        post_login2 = dict(username='fahad3', password='pass123')
+        response = self.app.post('/auth/login', json=post_login2)
         self.assertIn("Please input correct information", str(response.data))
