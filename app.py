@@ -19,6 +19,13 @@ def create_user():
     return jsonify({'message': '{} you have successfully created an account'.format(username)})
 
 
+@app.route('/auth/login', methods=['POST'])
+def login_user():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+    return jsonify({'message': '{} you have successfully created an account'.format(username)})
+
 
 if __name__ == '__main__':
     app.run()
