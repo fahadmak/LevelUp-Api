@@ -24,6 +24,5 @@ def create_user():
     return jsonify({'message': '{} you have successfully created an account'.format(username)})
 
 
-
 if __name__ == '__main__':
     app.run()
