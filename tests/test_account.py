@@ -52,13 +52,26 @@ class TestAccount(unittest.TestCase):
         self.assertIn("You are already logged in", str(response2.data))
 
 
-# Tests for login user
+    # Tests for login user
     def test_logout_user(self):
         post_logout = dict(username='fahad3')
         response = self.app.post('/auth/logout', json=post_logout)
         self.assertIn("fahad3 you have logged out, until next time ", str(response.data))
 
     def test_logout_user_not_logged_in(self):
-        post_login2 = dict(username='minatti')
-        response2 = self.app.post('/auth/logout', json=post_login2)
+        post_logout = dict(username='phillip')
+        response2 = self.app.post('/auth/logout', json=post_logout)
         self.assertIn("You must be logged in to logged out", str(response2.data))
+
+    # Tests for delete user
+    def test_delete_user(self):
+        post_login1 = dict(username='fahad3', password='pass123')
+        response = self.app.delete('/auth/delete/1')
+        self.assertIn("You must be logged in to deleted your account", str(response.data))
+
+    def test_delete_user_not_logged_in(self):
+        post_login = dict(username='minatti', password='pass1233')
+        response = self.app.post('/auth/login', json=post_login)
+        response1 = self.app.delete('/auth/delete/2')
+        response2 = self.app.delete('/auth/delete/2')
+        self.assertIn("This account does not exist", str(response2.data))
