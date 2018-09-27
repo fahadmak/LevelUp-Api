@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from api.auth.utils import search_account_by_username
+
 from api.auth.model import accounts, Account, logged_in_accounts
 
 app = Flask(__name__)
