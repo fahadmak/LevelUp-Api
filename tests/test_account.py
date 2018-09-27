@@ -51,7 +51,6 @@ class TestAccount(unittest.TestCase):
         response2 = self.app.post('/auth/login', json=post_login2)
         self.assertIn("You are already logged in", str(response2.data))
 
-
     # Tests for login user
     def test_logout_user(self):
         post_logout = dict(username='fahad3')
