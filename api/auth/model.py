@@ -17,7 +17,8 @@ class Account:
         }
         return account
 
-account = Account(1, 'fahad', 'fahad3', 'pass123')
-accounts = [account]
+account1 = Account(1, 'fahad', 'fahad3', 'pass123')
+account2 = Account(2, 'mina', 'minatti', 'pass1233')
+accounts = [account1, account2]
 logged_in_accounts = []
 deleted_accounts = []
