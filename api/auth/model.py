@@ -9,3 +9,14 @@ class Account:
 
     def __str__(self):
         return "{self.username} of ID {self.account_id} account has been successfully created".format(self=self)
+
+    def to_json(self):
+        account = {
+            'account_id': self.account_id,
+            'name': self.name,
+            'username': self.username,
+            'password': self.password,
+            'finished': self.finished,
+            'active': self.active
+        }
+        return account
