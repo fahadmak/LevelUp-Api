@@ -9,6 +9,13 @@ def create_user():
     name = data.get('name')
     username = data.get('username')
     password = data.get('password')
+    if not all([name, username, password]):
+        return jsonify({'message': 'Please fill missing fields'})
+    for item in [name, username, password]:
+        if not isinstance(item, str):
+            return jsonify({'message': 'Please input correct information'})
+        elif not item.isalpha():
+            return jsonify({'message': 'Please input correct information'})
     return jsonify({'message': '{} you have successfully created an account'.format(username)})
 
 
