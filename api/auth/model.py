@@ -1,3 +1,6 @@
+accounts = []
+deleted_accounts = []
+
 class Account:
     def __init__(self, account_id, name, username, password):
         self.account_id = account_id
