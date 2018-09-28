@@ -26,7 +26,7 @@ def create_user():
     account_id = max([account.account_id for account in accounts]) + 1 if accounts else 1
     account = Account(account_id, name, username, password)
     accounts.append(account)
-    return jsonify({'message': '{} you have successfully created an account'.format(username)})
+    return jsonify({'message': '{} of ID {} has created an account'.format(username, account.account_id)})
 
 
 @app.route('/auth/login', methods=['POST'])
@@ -99,7 +99,7 @@ def create_task(account_id):
     task_id = max([task.task_id for task in tasks]) + 1 if tasks else 1
     task = Task(task_id, task_name, account_id)
     tasks.append(task)
-    return jsonify({'message': '{} task has been created'.format(task.task_name)})
+    return jsonify({'message': '{} of ID {} task has been created'.format(task.task_name, task.task_id)})
 
 
 @app.route('/task/<int:account_id>/delete/<int:task_id>', methods=['DELETE'])
@@ -161,7 +161,8 @@ def mark_task(account_id, task_id):
     if marked != "True":
         return jsonify({'message': 'Please enter True to mark a task'})
     task.marked = bool(marked)
-    return jsonify({'message': '{} has been recovered successfully'.format(task.marked)})
+    return jsonify({'message': '{} has been marked'.format(task.task_name)})
+
 
 @app.route('/task/<int:account_id>/unmark/<int:task_id>', methods=['PUT'])
 def unmark_task(account_id, task_id):
@@ -180,6 +181,8 @@ def unmark_task(account_id, task_id):
     if marked != "False":
         return jsonify({'message': 'Please enter False to mark a task'})
     task.marked = bool(marked)
-    return jsonify({'message': '{} has been recovered successfully'.format(task.marked)})
+    return jsonify({'message': '{} has been unmarked'.format(task.task_name)})
+
+
 if __name__ == '__main__':
     app.run()
