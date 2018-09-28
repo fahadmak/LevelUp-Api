@@ -78,3 +78,21 @@ class TestAccount(unittest.TestCase):
         response = self.app.post('/auth/login', json=post_login)
         response3 = self.app.delete('/task/4/delete')
         self.assertIn("You have no tasks", str(response3.data))
+
+    # Tests for recover deleted tasks
+    def test_recover_deleted_tasks(self):
+        post_login = dict(username='fahad3', password='pass123')
+        response = self.app.post('/auth/login', json=post_login)
+        post_task1 = dict(task_name="inceptions")
+        response2 = self.app.post('/task/1', json=post_task1)
+        response3 = self.app.delete('/task/1/delete/1')
+        response4 = self.app.get('/task/1/delete/1/recover')
+        self.assertIn("inception has been recovered successfully", str(response4.data))
+
+    def test_recover_deleted_tasks_no_tasks(self):
+        post_login = dict(username='phillipwere', password='pass12345')
+        response = self.app.post('/auth/login', json=post_login)
+        response3 = self.app.delete('/task/4/delete')
+        response4 = self.app.get('/task/4/delete/1/recover')
+        self.assertIn("Task does not exist", str(response4.data))
+
