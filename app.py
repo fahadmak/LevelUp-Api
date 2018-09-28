@@ -1,6 +1,11 @@
 from flask import Flask, request, jsonify
+
 from api.auth.utils import search_account_by_username, search_account_by_id
 from api.auth.model import accounts, Account, logged_in_accounts
+
+from api.task.utils import search_task_by_id, search_task_by_account_id, search_task_by_task_name
+from api.task.model import tasks, Task, deleted_tasks
+
 
 app = Flask(__name__)
 
@@ -62,6 +67,7 @@ def logout_user():
     logged_in_accounts.remove(account)
     return jsonify({'message': '{} you have logged out, until next time '.format(logged_out_username)})
 
+
 @app.route('/auth/delete/<int:account_id>', methods=['DELETE'])
 def delete_user(account_id):
     account = search_account_by_id(account_id)
@@ -73,6 +79,18 @@ def delete_user(account_id):
     logged_in_accounts.remove(account)
     accounts.remove(account)
     return jsonify({'message': '{} you have deleted your account, until next time '.format(account_name)})
+
+
+@app.route('/task/<int:account_id>', methods=['POST'])
+def create_task(account_id):
+    data = request.json
+    task_name = data.get('task_name')
+    if not task_name:
+        return jsonify({'message': 'Please fill in task name'})
+    task_id = max([task.task_id for task in tasks]) + 1 if tasks else 1
+    task = Task(task_id, task_name, account_id)
+    tasks.append(task)
+    return jsonify({'message': '{} task has been created'.format(task.task_name)})
 
 
 if __name__ == '__main__':
