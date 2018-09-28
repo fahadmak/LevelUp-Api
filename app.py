@@ -3,8 +3,8 @@ from flask import Flask, request, jsonify
 from api.auth.utils import search_account_by_username, search_account_by_id
 from api.auth.model import accounts, Account, logged_in_accounts
 
-from api.task.utils import search_task_by_id, search_task_by_account_id, search_task_by_task_name
-from api.task.model import tasks, Task, deleted_tasks
+from api.task.utils import search_task_by_task_name
+from api.task.model import tasks, Task
 
 
 app = Flask(__name__)
@@ -83,10 +83,19 @@ def delete_user(account_id):
 
 @app.route('/task/<int:account_id>', methods=['POST'])
 def create_task(account_id):
+    account = search_account_by_id(account_id)
+    if account not in logged_in_accounts:
+        return jsonify({'message': 'Please Login before you can access the account'})
     data = request.json
     task_name = data.get('task_name')
     if not task_name:
         return jsonify({'message': 'Please fill in task name'})
+    if not isinstance(task_name, str):
+        return jsonify({'message': 'Task name should be in alphabetical characters'})
+    if not task_name.isalpha():
+        return jsonify({'message': 'Task name should be in alphabetical characters'})
+    if task_name in [task.task_name for task in tasks if task.account_id == account_id]:
+        return jsonify({'message': 'Task name already exists'})
     task_id = max([task.task_id for task in tasks]) + 1 if tasks else 1
     task = Task(task_id, task_name, account_id)
     tasks.append(task)
