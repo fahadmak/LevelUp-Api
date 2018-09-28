@@ -64,3 +64,17 @@ class TestAccount(unittest.TestCase):
         response3 = self.app.delete('/task/1/delete/1')
         self.assertIn("Task does not exist", str(response3.data))
 
+    # Tests for delete all tasks
+    def test_delete_all_tasks(self):
+        post_login = dict(username='fahad3', password='pass123')
+        response = self.app.post('/auth/login', json=post_login)
+        post_task1 = dict(task_name="inceptions")
+        response2 = self.app.post('/task/1', json=post_task1)
+        response3 = self.app.delete('/task/1/delete')
+        self.assertIn("All tasks have been successfully deleted", str(response3.data))
+
+    def test_delete_all_tasks_no_tasks(self):
+        post_login = dict(username='phillipwere', password='pass12345')
+        response = self.app.post('/auth/login', json=post_login)
+        response3 = self.app.delete('/task/4/delete')
+        self.assertIn("You have no tasks", str(response3.data))
