@@ -116,5 +116,19 @@ def delete_task(account_id, task_id):
     return jsonify({'message': '{} task has been deleted'.format(task_name)})
 
 
+@app.route('/task/<int:account_id>/delete', methods=['DELETE'])
+def delete_all_tasks(account_id):
+    account = search_account_by_id(account_id)
+    if account not in logged_in_accounts:
+        return jsonify({'message': 'Please Login before you can access the account'})
+    my_tasks = [task for task in tasks if task.account_id == account_id]
+    if not my_tasks:
+        return jsonify({'message': 'You have no tasks'})
+    for task in tasks:
+        deleted_tasks.append(task)
+    my_tasks.clear()
+    return jsonify({'message': 'All tasks have been successfully deleted'})
+
+
 if __name__ == '__main__':
     app.run()
