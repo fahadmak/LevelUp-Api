@@ -9,12 +9,37 @@ class TestAccount(unittest.TestCase):
 
     # Tests for create task
     def test_create_task(self):
-        post_signup = dict(task_name="inception")
-        response = self.app.post('/task/1', json=post_signup)
+        post_login = dict(username='fahad3', password='pass123')
+        response = self.app.post('/auth/login', json=post_login)
+        post_task = dict(task_name="inception")
+        response = self.app.post('/task/1', json=post_task)
         self.assertIn("inception task has been created", str(response.data))
 
     def test_create_task_empty_fields(self):
-        post_signup = dict()
-        response = self.app.post('/task/1', json=post_signup)
+        post_login = dict(username='fahad3', password='pass123')
+        response = self.app.post('/auth/login', json=post_login)
+        post_task = dict()
+        response = self.app.post('/task/1', json=post_task)
         self.assertIn("Please fill in task name", str(response.data))
+
+    def test_create_task_incorrect_input(self):
+        post_login = dict(username='fahad3', password='pass123')
+        response = self.app.post('/auth/login', json=post_login)
+        post_task = dict(task_name=1234)
+        response = self.app.post('/task/1', json=post_task)
+        self.assertIn("Task name should be in alphabetical characters", str(response.data))
+
+    def test_create_task_if_user_not_logged_in(self):
+        post_task = dict(task_name=1234)
+        response = self.app.post('/task/2', json=post_task)
+        self.assertIn("Task name should be in alphabetical characters", str(response.data))
+
+    def test_create_task_if_already_exists(self):
+        post_login = dict(username='minatti', password='pass1233')
+        response = self.app.post('/auth/login', json=post_login)
+        post_task1 = dict(task_name="inception")
+        response3 = self.app.post('/task/2', json=post_task1)
+        post_task2 = dict(task_name="inception")
+        response2 = self.app.post('/task/2', json=post_task2)
+        self.assertIn("Task name already exists", str(response2.data))
 
