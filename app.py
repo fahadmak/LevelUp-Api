@@ -1,10 +1,10 @@
 from flask import Flask, request, jsonify
 
-from api.auth.utils import search_account_by_username, search_account_by_id
 from api.auth.model import accounts, Account, logged_in_accounts
+from api.task.model import tasks, Task, deleted_tasks
 
-from api.task.utils import search_task_by_task_name
-from api.task.model import tasks, Task
+from api.auth.utils import search_account_by_username, search_account_by_id
+from api.task.utils import search_task_by_id
 
 
 app = Flask(__name__)
@@ -100,6 +100,20 @@ def create_task(account_id):
     task = Task(task_id, task_name, account_id)
     tasks.append(task)
     return jsonify({'message': '{} task has been created'.format(task.task_name)})
+
+
+@app.route('/task/<int:account_id>/delete/<int:task_id>', methods=['DELETE'])
+def delete_task(account_id, task_id):
+    account = search_account_by_id(account_id)
+    if account not in logged_in_accounts:
+        return jsonify({'message': 'Please Login before you can access the account'})
+    if task_id not in [task.task_id for task in tasks if task.account_id == account_id]:
+        return jsonify({'message': 'Task does not exist'})
+    task = search_task_by_id(task_id)
+    task_name = task.task_name
+    deleted_tasks.append(task)
+    tasks.remove(task)
+    return jsonify({'message': '{} task has been deleted'.format(task_name)})
 
 
 if __name__ == '__main__':
