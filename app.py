@@ -130,5 +130,14 @@ def delete_all_tasks(account_id):
     return jsonify({'message': 'All tasks have been successfully deleted'})
 
 
+@app.route('/task/<int:account_id>/delete/<int:task_id>/recover', methods=['GET'])
+def recover(account_id, task_id):
+    if task_id not in [task.task_id for task in deleted_tasks if task.account_id == account_id]:
+        return jsonify({'message': 'Task does not exist'})
+    task = [task for task in deleted_tasks if task_id == task.task_id][0]
+    tasks.append(task)
+    return jsonify({'message': '{} has been recovered successfully'.format(task.task_name)})
+
+
 if __name__ == '__main__':
     app.run()
