@@ -132,11 +132,36 @@ def delete_all_tasks(account_id):
 
 @app.route('/task/<int:account_id>/delete/<int:task_id>/recover', methods=['GET'])
 def recover(account_id, task_id):
+    account = search_account_by_id(account_id)
+    if not account:
+        return jsonify({'message': 'Please Login before you can access the account'})
+    if account not in logged_in_accounts:
+        return jsonify({'message': 'Please Login before you can access the account'})
     if task_id not in [task.task_id for task in deleted_tasks if task.account_id == account_id]:
         return jsonify({'message': 'Task does not exist'})
     task = [task for task in deleted_tasks if task_id == task.task_id][0]
     tasks.append(task)
     return jsonify({'message': '{} has been recovered successfully'.format(task.task_name)})
+
+
+@app.route('/task/<int:account_id>/mark/<int:task_id>', methods=['PUT'])
+def mark_task(account_id, task_id):
+    account = search_account_by_id(account_id)
+    if account not in logged_in_accounts:
+        return jsonify({'message': 'Please Login before you can access the account'})
+    task = search_task_by_id(task_id)
+    if not task:
+        return jsonify({'message': 'Task does not exist'})
+    if task.marked is True:
+        return jsonify({'message': 'Task is already marked'})
+    data = request.json
+    marked = data.get('marked')
+    if not marked:
+        return jsonify({'message': 'Please fill in task name'})
+    if marked != "True":
+        return jsonify({'message': 'Please enter True to mark a task'})
+    task.marked = bool(marked)
+    return jsonify({'message': '{} has been recovered successfully'.format(task.marked)})
 
 
 if __name__ == '__main__':
