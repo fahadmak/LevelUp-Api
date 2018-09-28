@@ -2,7 +2,7 @@ import unittest
 from app import app
 
 
-class TestAccount(unittest.TestCase):
+class TestTask(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         self.app.testing = True
@@ -13,7 +13,7 @@ class TestAccount(unittest.TestCase):
         response = self.app.post('/auth/login', json=post_login)
         post_task = dict(task_name="inception")
         response = self.app.post('/task/1', json=post_task)
-        self.assertIn("inception task has been created", str(response.data))
+        self.assertIn("inception of ID 4 task has been created", str(response.data))
 
     def test_create_task_empty_fields(self):
         post_login = dict(username='fahad3', password='pass123')
@@ -102,7 +102,7 @@ class TestAccount(unittest.TestCase):
         response = self.app.post('/auth/login', json=post_login)
         post_task3 = dict(marked="True")
         response3 = self.app.put('/task/1/mark/2', json=post_task3)
-        self.assertIn("True has been recovered successfully", str(response3.data))
+        self.assertIn("fahad334 has been marked", str(response3.data))
 
     # Tests for marked tasks
     def test_mark_task_empty(self):
@@ -110,26 +110,6 @@ class TestAccount(unittest.TestCase):
         response = self.app.post('/auth/login', json=post_login)
         post_task3 = dict()
         response3 = self.app.put('/task/4/mark/3', json=post_task3)
-        self.assertIn("Please fill in task name", str(response3.data))
-
-    # Tests for marked tasks
-    def test_unmark_task(self):
-        post_login = dict(username='fahad3', password='pass123')
-        response = self.app.post('/auth/login', json=post_login)
-        post_task3 = dict(marked="True")
-        response3 = self.app.put('/task/1/mark/2', json=post_task3)
-        post_task4 = dict(marked="False")
-        response4 = self.app.put('/task/1/unmark/2', json=post_task4)
-        self.assertIn("True has been recovered successfully", str(response4.data))
-
-    # Tests for marked tasks
-    def test_unmark_task_empty(self):
-        post_login = dict(username='phillipwere', password='pass12345')
-        response = self.app.post('/auth/login', json=post_login)
-        post_task3 = dict(marked='True')
-        response3 = self.app.put('/task/4/mark/3', json=post_task3)
-        post_task3 = dict()
-        response3 = self.app.put('/task/4/unmark/3', json=post_task3)
         self.assertIn("Please fill in task name", str(response3.data))
 
 

@@ -11,7 +11,7 @@ class TestAccount(unittest.TestCase):
     def test_create_user(self):
         post_signup = dict(name="inception", username="Fahad", password="clooneyboss")
         response = self.app.post('/auth/signup', json=post_signup)
-        self.assertIn("Fahad you have successfully created an account", str(response.data))
+        self.assertIn("Fahad of ID 7 has created an account", str(response.data))
 
     def test_create_user_empty_fields(self):
         post_signup = dict(name="inception", password="clooneyboss")
