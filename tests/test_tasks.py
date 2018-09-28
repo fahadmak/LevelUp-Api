@@ -43,3 +43,24 @@ class TestAccount(unittest.TestCase):
         response2 = self.app.post('/task/2', json=post_task2)
         self.assertIn("Task name already exists", str(response2.data))
 
+    # Tests for delete task
+    def test_delete_task(self):
+        post_login = dict(username='fahad3', password='pass123')
+        response = self.app.post('/auth/login', json=post_login)
+        post_task1 = dict(task_name="inception")
+        response2 = self.app.post('/task/1', json=post_task1)
+        response3 = self.app.delete('/task/1/delete/1')
+        self.assertIn("inception task has been deleted", str(response3.data))
+
+    def test_delete_task_user_not_logged_in(self):
+        post_task1 = dict(task_name="inceptions")
+        response2 = self.app.post('/task/2', json=post_task1)
+        response3 = self.app.delete('/task/3/delete/2')
+        self.assertIn("Please Login before you can access the account", str(response3.data))
+
+    def test_delete_task_task_doesnot_exist(self):
+        post_login = dict(username='fahad3', password='pass123')
+        response = self.app.post('/auth/login', json=post_login)
+        response3 = self.app.delete('/task/1/delete/1')
+        self.assertIn("Task does not exist", str(response3.data))
+
