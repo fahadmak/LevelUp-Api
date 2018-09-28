@@ -163,6 +163,23 @@ def mark_task(account_id, task_id):
     task.marked = bool(marked)
     return jsonify({'message': '{} has been recovered successfully'.format(task.marked)})
 
-
+@app.route('/task/<int:account_id>/unmark/<int:task_id>', methods=['PUT'])
+def unmark_task(account_id, task_id):
+    account = search_account_by_id(account_id)
+    if account not in logged_in_accounts:
+        return jsonify({'message': 'Please Login before you can access the account'})
+    task = search_task_by_id(task_id)
+    if not task:
+        return jsonify({'message': 'Task does not exist'})
+    if task.marked is False:
+        return jsonify({'message': 'Task is already marked'})
+    data = request.json
+    marked = data.get('marked')
+    if not marked:
+        return jsonify({'message': 'Please fill in task name'})
+    if marked != "False":
+        return jsonify({'message': 'Please enter False to mark a task'})
+    task.marked = bool(marked)
+    return jsonify({'message': '{} has been recovered successfully'.format(task.marked)})
 if __name__ == '__main__':
     app.run()
