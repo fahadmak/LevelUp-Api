@@ -47,10 +47,10 @@ class TestAccount(unittest.TestCase):
     def test_delete_task(self):
         post_login = dict(username='fahad3', password='pass123')
         response = self.app.post('/auth/login', json=post_login)
-        post_task1 = dict(task_name="inception")
+        post_task1 = dict(task_name="fahad")
         response2 = self.app.post('/task/1', json=post_task1)
         response3 = self.app.delete('/task/1/delete/1')
-        self.assertIn("inception task has been deleted", str(response3.data))
+        self.assertIn("fahad task has been deleted", str(response3.data))
 
     def test_delete_task_user_not_logged_in(self):
         post_task1 = dict(task_name="inceptions")
@@ -74,20 +74,20 @@ class TestAccount(unittest.TestCase):
         self.assertIn("All tasks have been successfully deleted", str(response3.data))
 
     def test_delete_all_tasks_no_tasks(self):
-        post_login = dict(username='phillipwere', password='pass12345')
+        post_login = dict(username='Andela', password='pass12345')
         response = self.app.post('/auth/login', json=post_login)
-        response3 = self.app.delete('/task/4/delete')
+        response3 = self.app.delete('/task/6/delete')
         self.assertIn("You have no tasks", str(response3.data))
 
     # Tests for recover deleted tasks
     def test_recover_deleted_tasks(self):
         post_login = dict(username='fahad3', password='pass123')
         response = self.app.post('/auth/login', json=post_login)
-        post_task1 = dict(task_name="inceptions")
+        post_task1 = dict(task_name="fahad")
         response2 = self.app.post('/task/1', json=post_task1)
-        response3 = self.app.delete('/task/1/delete/1')
+        response3 = self.app.delete('/task/1/delete/3')
         response4 = self.app.get('/task/1/delete/1/recover')
-        self.assertIn("inception has been recovered successfully", str(response4.data))
+        self.assertIn("fahad has been recovered successfully", str(response4.data))
 
     def test_recover_deleted_tasks_no_tasks(self):
         post_login = dict(username='phillipwere', password='pass12345')
@@ -95,4 +95,23 @@ class TestAccount(unittest.TestCase):
         response3 = self.app.delete('/task/4/delete')
         response4 = self.app.get('/task/4/delete/1/recover')
         self.assertIn("Task does not exist", str(response4.data))
+
+    # Tests for marked tasks
+    def test_mark_task(self):
+        post_login = dict(username='fahad3', password='pass123')
+        response = self.app.post('/auth/login', json=post_login)
+        post_task3 = dict(marked="True")
+        response3 = self.app.put('/task/1/mark/2', json=post_task3)
+        self.assertIn("True has been recovered successfully", str(response3.data))
+
+    # Tests for marked tasks
+    def test_mark_task_empty(self):
+        post_login = dict(username='phillipwere', password='pass12345')
+        response = self.app.post('/auth/login', json=post_login)
+        post_task3 = dict()
+        response3 = self.app.put('/task/4/mark/3', json=post_task3)
+        self.assertIn("Please fill in task name", str(response3.data))
+
+
+
 
